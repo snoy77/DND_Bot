@@ -6,21 +6,17 @@ import random as rand
 import BotStatusPrinter as BSP
 import telegainfo as TI
 
-
-def stop():
-    input('\nEnter для продолжения...\n')
-
-print('Подключение к боту...')
+#----------------Инициализация бота----------------
+BSP.stopForDebug(0, 'Подключение к боту...')
 bot = telebot.TeleBot(TI.token)
-print('Подключение к боту... УСПЕШНО')
+BSP.stopForDebug(0, 'Подключение к боту... УСПЕШНО')
 
-print('Инициализация функций...')
-BSP.stopForDebug(0)
+#----------------Определение событий----------------
+BSP.stopForDebug(0, 'Инициализация функций...')
 
 @bot.message_handler(commands=['d4', 'd6', 'd10', 'd20'])
 def diceDrop(message):
-    BSP.stopForDebug(0, 'diceDrop начало')
-
+    BSP.stopForDebug(0, 'diceDrop начало', 0)
 
     chat_id = message.chat.id
     message_text = message.text
@@ -36,12 +32,12 @@ def diceDrop(message):
     #bot.send_message(chat_id, 'Мне похуй')
     BSP.printStatusBot(message_data, chat_id, goint_message, 1)
 
-    BSP.stopForDebug(0, 'diceDrop Конец')
+    BSP.stopForDebug(0, 'diceDrop Конец', 0)
 
 
 @bot.message_handler(commands=['start', 'clr'])
 def startCommand(message):
-    BSP.stopForDebug(0, "startCommand начало")
+    BSP.stopForDebug(0, "startCommand начало", 0)
 
     chat_id = message.chat.id
     message_text = message.text
@@ -72,27 +68,40 @@ def startCommand(message):
 
     bot.send_message(chat_id, goint_message, reply_markup = keyboard)
     BSP.printStatusBot(message_data, chat_id, goint_message, 1)
-    BSP.stopForDebug(0, "startCommand Конец")
+    BSP.stopForDebug(0, "startCommand Конец", 0)
 
 @bot.message_handler(content_types=['text'])
 def message_going(message):
-    BSP.stopForDebug(0, "message_going начало")
+    BSP.stopForDebug(0, "message_going начало", 0)
 
     chat_id = message.chat.id
     message_text = message.text
     message_data = message.date
 
-    keyboard = types.ReplyKeyboardRemove()
     BSP.printStatusBot(message_data, chat_id, message_text, 0)
+    #BSP.stopForDebug(0, "message_going - Попытка отправки ответа...", 0)
 
-    BSP.printStatusBot(message_data, chat_id, "Не реагирую...", 2)
+    if message_text.lower() == 'github' or message_text.lower() == "гитхаб":
+        going_message = "[Гитхаб этого бота:](https://github.com/snoy77/DND_Bot)"
+        bot.send_message(chat_id, going_message, parse_mode='Markdown')
+    elif message_text.lower() == 'живой?' or message_text.lower() == 'жив?' or message_text.lower() == 'ты жив?':
+        going_message = "Агась"
+        bot.send_message(chat_id, going_message)
+        bot.send_sticker(chat_id, 'CAACAgEAAxkBAAPkYn5t2aAkAAGiipkFKzpGvXz4bsUcAAJaAAPArAgjmrw81VndF8IkBA')
+    else:
+        going_message = 'Не понял, разъясни почётче...'
+        bot.send_message(chat_id, going_message)
 
-    BSP.stopForDebug(0, "message_going Конец")
+    BSP.printStatusBot(message_data, chat_id, going_message, 1)
 
-print('Инициализация функций... УСПЕШНО')
+    BSP.stopForDebug(0, "message_going Конец", 0)
 
+BSP.stopForDebug(0, 'Инициализация функций... УСПЕШНО', 1)
+
+
+#----------------Запуск бота----------------
 print('Работа бота...\n')
 bot.polling(none_stop=True, interval=0)
 print('\n\nРабота бота ЗАВЕРШЕНА')
 
-stop()
+BSP.stopForDebug(1)

@@ -1,3 +1,4 @@
+#input('Инициализация модуля BSP')
 def printStatusBot(message_data, chat_id, message_text, mesType):
     if mesType == 0:
         print(getChatTemples(chat_id) + " << " + message_text)
@@ -7,11 +8,13 @@ def printStatusBot(message_data, chat_id, message_text, mesType):
         print(getChatTemples(chat_id) + " == " + message_text)
 def getChatTemples(chat_id):
     return '[' +  str(chat_id) + ']'
-
-#Функция для остановки дебага или просто остановки. Останавливает индивидуально строку,
+#input('Инициализация модуля BSP')
+#Функция для дебага или просто вывода статуса. Останавливает индивидуально строку,
     #или же все строки при инциализации дебага в начале
 stopAll = int(input("Режим дебага? Введите 1 (да) или 0 (нет):\n"))
-def stopForDebug(individualStop, stop_text = ''):
-
+def stopForDebug(individualStop, status_text = '', anywayWriteStatus = 1):
     if stopAll == 1 or individualStop == 1:
-        input('!!! Остановка дебага: - ' + stop_text)
+        input('!!! Остановка дебага: - ' + status_text)
+        return
+    if anywayWriteStatus == 1:
+        print(status_text)
