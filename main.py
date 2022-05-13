@@ -5,7 +5,6 @@ import random as rand
 
 import BotStatusPrinter as BSP
 import telegainfo as TI
-import GameSession
 
 
 def stop():
