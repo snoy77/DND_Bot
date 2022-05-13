@@ -11,6 +11,13 @@ BSP.stopForDebug(0, 'Подключение к боту...')
 bot = telebot.TeleBot(TI.token)
 BSP.stopForDebug(0, 'Подключение к боту... УСПЕШНО')
 
+#----------------Определение некоторых методов----------------
+def getMessageChatMainInfo(chat):
+    return str(chat.id) + ' ' + str(chat.username) + ' ' + str(chat.title)
+def getMessageUserMainInfo(user):
+    return str(user.id) + ' ' + str(user.first_name) + ' ' + str(user.last_name)
+
+
 #----------------Определение событий----------------
 BSP.stopForDebug(0, 'Инициализация функций...')
 
@@ -21,8 +28,10 @@ def diceDrop(message):
     chat_id = message.chat.id
     message_text = message.text
     message_data = message.date
+    message_user = getMessageUserMainInfo(message.from_user)
+    message_chat = getMessageChatMainInfo(message.chat)
+    BSP.printStatusBot(message_data, message_user, message_chat, message_text, 0)
 
-    BSP.printStatusBot(message_data, chat_id, message_text, 0)
     dice_index = int(message_text.replace('/d', ''))
     dice_result = rand.randint(1, dice_index)
 
@@ -30,7 +39,7 @@ def diceDrop(message):
 
     bot.send_message(chat_id, goint_message)
     #bot.send_message(chat_id, 'Мне похуй')
-    BSP.printStatusBot(message_data, chat_id, goint_message, 1)
+    BSP.printStatusBot(message_data, message_user, message_chat, goint_message, 1)
 
     BSP.stopForDebug(0, 'diceDrop Конец', 0)
 
@@ -42,8 +51,11 @@ def startCommand(message):
     chat_id = message.chat.id
     message_text = message.text
     message_data = message.date
+    message_user = getMessageUserMainInfo(message.from_user)
+    message_chat = getMessageChatMainInfo(message.chat)
 
-    BSP.printStatusBot(message_data, chat_id, message_text, 0)
+    BSP.printStatusBot(message_data, message_user, message_chat, message_text, 0)
+
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard_buttons = []
 
@@ -67,7 +79,7 @@ def startCommand(message):
         keyboard.add(button_clr)
 
     bot.send_message(chat_id, goint_message, reply_markup = keyboard)
-    BSP.printStatusBot(message_data, chat_id, goint_message, 1)
+    BSP.printStatusBot(message_data, message_user, message_chat, goint_message, 1)
     BSP.stopForDebug(0, "startCommand Конец", 0)
 
 @bot.message_handler(content_types=['text'])
@@ -77,9 +89,10 @@ def message_going(message):
     chat_id = message.chat.id
     message_text = message.text
     message_data = message.date
-
-    BSP.printStatusBot(message_data, chat_id, message_text, 0)
-    #BSP.stopForDebug(0, "message_going - Попытка отправки ответа...", 0)
+    message_user = getMessageUserMainInfo(message.from_user)
+    message_chat = getMessageChatMainInfo(message.chat)
+    BSP.printStatusBot(message_data, message_user, message_chat, message_text, 0)
+    BSP.stopForDebug(0, "message_going - Попытка отправки ответа...", 0)
 
     if message_text.lower() == 'github' or message_text.lower() == "гитхаб":
         going_message = "[Гитхаб этого бота:](https://github.com/snoy77/DND_Bot)"
@@ -92,7 +105,7 @@ def message_going(message):
         going_message = 'Не понял, разъясни почётче...'
         bot.send_message(chat_id, going_message)
 
-    BSP.printStatusBot(message_data, chat_id, going_message, 1)
+    BSP.printStatusBot(message_data, message_user, message_chat, going_message, 1)
 
     BSP.stopForDebug(0, "message_going Конец", 0)
 

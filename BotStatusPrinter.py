@@ -1,13 +1,15 @@
 #input('Инициализация модуля BSP')
-def printStatusBot(message_data, chat_id, message_text, mesType):
+def printStatusBot(message_data, user, chat, message_text, mesType):
     if mesType == 0:
-        print(getChatTemples(chat_id) + " << " + message_text)
+        print(getChatTemples(chat) + getUserTemples(user) + " << " + message_text)
     elif mesType == 1:
-        print(getChatTemples(chat_id) + " >> " + message_text)
+        print(getChatTemples(chat) + getUserTemples(user) + " >> " + message_text)
     elif mesType == 2:
-        print(getChatTemples(chat_id) + " == " + message_text)
-def getChatTemples(chat_id):
-    return '[' +  str(chat_id) + ']'
+        print(getChatTemples(chat) + getUserTemples(user) + " == " + message_text)
+def getChatTemples(chat):
+    return '[' +  str(chat) + ']'
+def getUserTemples(user):
+    return '{' +  str(user) + '}'
 #input('Инициализация модуля BSP')
 #Функция для дебага или просто вывода статуса. Останавливает индивидуально строку,
     #или же все строки при инциализации дебага в начале
