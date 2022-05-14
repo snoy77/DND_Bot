@@ -6,6 +6,9 @@ import random as rand
 import BotStatusPrinter as BSP
 import telegainfo as TI
 
+#----------------Инициализаци первых данных----------------
+ADMIN_ID = 1182327310
+
 #----------------Инициализация бота----------------
 BSP.stopForDebug(0, 'Подключение к боту...')
 bot = telebot.TeleBot(TI.token)
@@ -20,6 +23,31 @@ def getMessageUserMainInfo(user):
 
 #----------------Определение событий----------------
 BSP.stopForDebug(0, 'Инициализация функций...')
+
+@bot.message_handler(commands=['debagon', 'debagoff'])
+def debag_enable(message):
+    #------Шаблон первичных данных------
+    chat_id = message.chat.id
+    message_text = message.text
+    message_data = message.date
+    message_user = getMessageUserMainInfo(message.from_user)
+    message_chat = getMessageChatMainInfo(message.chat)
+    BSP.printStatusBot(message_data, message_user, message_chat, message_text, 0)
+
+    if message.from_user.id == ADMIN_ID:
+        if message_text == '/debagoff':
+            BSP.stopAll = 0
+            going_message = 'Режим дебага выключен'
+            BSP.printStatusBot(message_data, message_user, message_chat, 'Выключен режим дебага', 2)
+        elif message_text == '/debagon':
+            BSP.stopAll = 1
+            going_message = 'Режим дебага включен'
+            BSP.printStatusBot(message_data, message_user, message_chat, 'Включен режим дебага', 2)
+
+        bot.send_message(chat_id, going_message)
+        BSP.printStatusBot(message_data, message_user, message_chat, going_message, 1)
+    else:
+        BSP.printStatusBot(message_data, message_user, message_chat, 'Пользователь не админ бота, игнорю', 2)
 
 @bot.message_handler(commands=['d4', 'd6', 'd10', 'd20'])
 def diceDrop(message):
@@ -53,15 +81,16 @@ def startCommand(message):
     message_data = message.date
     message_user = getMessageUserMainInfo(message.from_user)
     message_chat = getMessageChatMainInfo(message.chat)
-
     BSP.printStatusBot(message_data, message_user, message_chat, message_text, 0)
 
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard_buttons = []
+    sendAnswer = 0 #Индекс истины для отправки ответа
 
     if message_text == '/clr':
         keyboard = types.ReplyKeyboardRemove()
         goint_message = 'Убираю клаву...'
+
+        sendAnswer = 1
     elif message_text == '/start':
 
         goint_message = 'Начинаем игру!'
@@ -78,8 +107,14 @@ def startCommand(message):
         keyboard.add(button_d20)
         keyboard.add(button_clr)
 
-    bot.send_message(chat_id, goint_message, reply_markup = keyboard)
-    BSP.printStatusBot(message_data, message_user, message_chat, goint_message, 1)
+        sendAnswer = 1
+
+    if sendAnswer != 1:
+        bot.send_message(chat_id, goint_message, reply_markup = keyboard)
+        BSP.printStatusBot(message_data, message_user, message_chat, goint_message, 1)
+    else:
+        BSP.printStatusBot(message_data, message_user, message_chat, 'Не понял что он написал мне', 2)
+
     BSP.stopForDebug(0, "startCommand Конец", 0)
 
 @bot.message_handler(content_types=['text'])
@@ -92,6 +127,7 @@ def message_going(message):
     message_user = getMessageUserMainInfo(message.from_user)
     message_chat = getMessageChatMainInfo(message.chat)
     BSP.printStatusBot(message_data, message_user, message_chat, message_text, 0)
+
     BSP.stopForDebug(0, "message_going - Попытка отправки ответа...", 0)
 
     if message_text.lower() == 'github' or message_text.lower() == "гитхаб":
