@@ -109,7 +109,7 @@ def startCommand(message):
 
         sendAnswer = 1
 
-    if sendAnswer != 1:
+    if sendAnswer == 1:
         bot.send_message(chat_id, goint_message, reply_markup = keyboard)
         BSP.printStatusBot(message_data, message_user, message_chat, goint_message, 1)
     else:
