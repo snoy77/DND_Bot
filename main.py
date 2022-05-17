@@ -3,6 +3,7 @@ from telebot import types
 
 import random as rand
 
+import WordsLists as WL
 import BotStatusPrinter as BSP
 import telegainfo as TI
 
@@ -129,11 +130,12 @@ def message_going(message):
     BSP.printStatusBot(message_data, message_user, message_chat, message_text, 0)
 
     BSP.stopForDebug(0, "message_going - Попытка отправки ответа...", 0)
-
-    if message_text.lower() == 'github' or message_text.lower() == "гитхаб":
+    #if  message_text.lower() == 'github' or message_text.lower() == "гитхаб":  
+    if  message_text.lower().replace('?','') in WL.getGit:
         going_message = "[Гитхаб этого бота:](https://github.com/snoy77/DND_Bot)"
         bot.send_message(chat_id, going_message, parse_mode='Markdown')
-    elif message_text.lower() == 'живой?' or message_text.lower() == 'жив?' or message_text.lower() == 'ты жив?':
+    #elif message_text.lower() == 'живой?' or message_text.lower() == 'жив?' or message_text.lower() == 'ты жив?':
+    elif message_text.lower().replace('?','') in WL.aliveQuetions:
         going_message = "Агась"
         bot.send_message(chat_id, going_message)
         bot.send_sticker(chat_id, 'CAACAgEAAxkBAAPkYn5t2aAkAAGiipkFKzpGvXz4bsUcAAJaAAPArAgjmrw81VndF8IkBA')
